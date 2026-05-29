@@ -50,3 +50,17 @@ body {
 .submit-button:hover {
     background-color: blue;
 }
+
+.error-for-input {
+    border: 2px solid red !important;
+    outline: none;
+}
+
+
+.message-for-error {
+    color: red;
+    font-size: 12px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: none;
+}
