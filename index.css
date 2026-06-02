@@ -5,6 +5,7 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    font-family: sans-serif;
 }
 
 .form-wrapper {
@@ -12,6 +13,7 @@ body {
     padding: 30px;
     width: 100%;
     max-width: 400px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Трохи краси */
 }
 
 .form-wrapper h2 {
@@ -45,22 +47,21 @@ body {
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 .submit-button:hover {
     background-color: blue;
 }
 
-.error-for-input {
-    border: 2px solid red !important;
-    outline: none;
-}
-
-
 .message-for-error {
     color: red;
-    font-size: 12px;
+    font-size: 13px;
     margin-top: -10px;
-    margin-bottom: 10px;
-    display: none;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 2px solid red; 
+    background-color: lightpink; 
+    box-sizing: border-box;
+    display: none; 
 }

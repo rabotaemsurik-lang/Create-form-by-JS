@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
-    
+    const EMAIL_REGEX = /^[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
     class Person {
         constructor(data) {
             Object.assign(this, data); 
@@ -12,12 +13,16 @@ document.addEventListener("DOMContentLoaded", function() {
         { name: "nickName", type: "text", placeholder: "Nickname" },
         { name: "email", type: "email", placeholder: "Email Address" }
     ];
+
     const wrapper = document.createElement("div");
     wrapper.className = "form-wrapper";
+    
     const title = document.createElement("h2");
     title.innerText = "Create Account";
     wrapper.appendChild(title);
+    
     const form = document.createElement("form");
+
     fields.forEach(function(field) {
         const input = document.createElement("input");
         input.type = field.type;
@@ -26,28 +31,33 @@ document.addEventListener("DOMContentLoaded", function() {
         input.className = "di";
         input.required = true;
         form.appendChild(input);
+
         if (field.name === "email") {
             const errorText = document.createElement("div");
             errorText.className = "message-for-error";
             errorText.id = "email-error-msg";
-            errorText.innerText = "помилка валідації email";
+            errorText.innerText = "Помилка валідації email. Некоректний формат!";
             form.appendChild(errorText);
+
             input.addEventListener("input", function() {
                 validateEmail(input, errorText);
             });
         }
     });
+
     function validateEmail(inputElement, errorMessageElement) {
-        const emailPattern = /^[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        const isValid = emailPattern.test(inputElement.value);
-        if (!isValid && inputElement.value !== "") {
-            inputElement.classList.add("error-for-input");
-            errorMessageElement.style.display = "block";
-        } else {
-            inputElement.classList.remove("error-for-input");
+        const isValid = EMAIL_REGEX.test(inputElement.value);
+        
+        if (isValid || inputElement.value === "") {
+            inputElement.classList.remove("input-error-focus"); 
             errorMessageElement.style.display = "none";
+            return true;
+        } else {
+            errorMessageElement.style.display = "block"; 
+            return false;
         }
     }
+
     const submitBtn = document.createElement("button");
     submitBtn.type = "submit";
     submitBtn.innerText = "Create account";
@@ -60,18 +70,28 @@ document.addEventListener("DOMContentLoaded", function() {
     form.addEventListener("submit", function(e) {
         e.preventDefault();
         const emailInput = form.querySelector('input[name="email"]');
-        const emailPattern = /^[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailPattern.test(emailInput.value)) {
+        const errorText = document.getElementById("email-error-msg");
+        
+        if (emailInput.value === "") {
+            errorText.style.display = "block";
             return;
         }
+
+        const isEmailValid = validateEmail(emailInput, errorText);
+        if (!isEmailValid) {
+            return; 
+        }
+
         const formData = new FormData(form);
         const data = {};
         formData.forEach(function(value, key) {
             data[key] = value;
         });
-        const user = new Person(data);
-        localStorage.setItem(user.lastName, JSON.stringify(user));
-        form.reset();
 
+        const user = new Person(data);
+        localStorage.setItem(user.email, JSON.stringify(user));
+    
+        form.reset();
+        errorText.style.display = "none"; 
     });
 });
